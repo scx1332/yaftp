@@ -14,6 +14,7 @@ jobs:
 
   build:
     runs-on: ${{ matrix.build-on }}
+    continue-on-error: true
     needs: create-release
     strategy:
       matrix:
