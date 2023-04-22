@@ -68,8 +68,8 @@ jobs:
 
       - name: Install rustup
         run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain none
-          
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain none
+
       - name: Install Rust stable toolchain ${{ matrix.target }}
         uses: actions-rs/toolchain@v1
         with:
