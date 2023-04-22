@@ -77,7 +77,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: fmt
-          args: --bin gftp --features="bin" --check
+          args: --check
 
       - name: Run tests
         if: ${{ matrix.run-tests }}
