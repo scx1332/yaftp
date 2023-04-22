@@ -1,9 +1,9 @@
 use anyhow::Result;
 use env_logger::{Builder, Env, Target};
-use yaftp as gftp;
 use gftp::rpc::{
     BenchmarkCommands, RpcBody, RpcId, RpcMessage, RpcRequest, RpcResult, RpcStatusResult,
 };
+use yaftp as gftp;
 
 use structopt::{clap, StructOpt};
 use tokio::io;
