@@ -82,7 +82,7 @@ jobs:
         with:
           use-cross: ${{ matrix.use-cross }}
           command: build
-          args: --profile release-lto --target ${{ matrix.target }}
+          args: --bin gftp --features="bin" --profile release-lto --target ${{ matrix.target }}
 
       - name: Gz asset
         run: |

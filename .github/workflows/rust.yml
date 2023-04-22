@@ -77,18 +77,18 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: fmt
-          args: --check
+          args: --bin gftp --features="bin" --check
 
       - name: Run tests
         if: ${{ matrix.run-tests }}
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --profile dev --target ${{ matrix.target }} -- --nocapture
+          args: --bin gftp --features="bin" --profile dev --target ${{ matrix.target }} -- --nocapture
 
       - name: Build binary target/${{ matrix.target }}/release/yaftp
         uses: actions-rs/cargo@v1
         with:
           use-cross: ${{ matrix.use-cross }}
           command: build
-          args: --profile dev --target ${{ matrix.target }}
+          args: --bin gftp --features="bin" --profile dev --target ${{ matrix.target }}
