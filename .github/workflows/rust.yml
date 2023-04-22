@@ -70,10 +70,7 @@ jobs:
         if: ${{ !matrix.use-cross }}
         run: |
           set -ex
-          rm ~/.cargo/bin/rustfmt
-          rm ~/.cargo/bin/cargo-fmt
           rustup update 
-          rustup component add rustfmt
           rustup target add ${{ matrix.target }}
 
       - name: Install bin install if needed
