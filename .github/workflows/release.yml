@@ -99,7 +99,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: yaftp${{ matrix.exe }}.tar.gz
+          file: yaftp.tar.gz
           asset_name: yaftp-${{ matrix.os }}-${{ matrix.cpu }}.tar.gz
           tag: ${{ github.ref }}
           overwrite: true
