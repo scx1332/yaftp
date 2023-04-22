@@ -71,7 +71,7 @@ jobs:
         run: |
           set -ex
           rustup update
-          rustup target add stable-${{ matrix.target }}
+          rustup target add ${{ matrix.target }}
 
       - name: Install bin install if needed
         run: |
