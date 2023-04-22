@@ -70,6 +70,8 @@ jobs:
         if: ${{ matrix.install-musl }}
         run: |
           set -ex
+          rm ~/.cargo/bin/rustfmt
+          rm ~/.cargo/bin/cargo-fmt
           rustup update
           rustup target add ${{ matrix.target }}
 
