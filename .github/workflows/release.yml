@@ -91,7 +91,6 @@ jobs:
 
       - name: Gz asset
         run: |
-          set -ex
           mv target/${{ matrix.target }}/release-lto/gftp${{ matrix.exe }} target/${{ matrix.target }}/release-lto/yaftp${{ matrix.exe }}
           tar -cf - -C target/${{ matrix.target }}/release-lto/ yaftp${{ matrix.exe }} | gzip -9 > yaftp.tar.gz
           tar -cf - -C target/${{ matrix.target }}/release-lto/ yaftp${{ matrix.exe }} | xz -9 > yaftp.tar.xz
