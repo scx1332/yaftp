@@ -1,6 +1,5 @@
 use anyhow::{anyhow, Result};
 use futures::future::{FutureExt, LocalBoxFuture};
-use yaftp::rpc::*;
 use sha3::digest::generic_array::GenericArray;
 use sha3::Digest;
 use std::ffi::OsString;
@@ -12,6 +11,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use structopt::StructOpt;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::process::{ChildStdin, ChildStdout, Command};
+use yaftp::rpc::*;
 
 static SEQ: AtomicUsize = AtomicUsize::new(0);
 type HashOutput = GenericArray<u8, <sha3::Sha3_512 as Digest>::OutputSize>;
