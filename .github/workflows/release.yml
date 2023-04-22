@@ -38,7 +38,7 @@ jobs:
             os: macOS
             target: aarch64-apple-darwin
             build-on: macos-latest
-            use-cross: true
+            use-cross: false
             install-musl: false
             exe: ""
             run-tests: false
