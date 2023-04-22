@@ -66,13 +66,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y musl-tools
 
-      - name: Install musl-tools if needed
-        if: ${{ matrix.install-musl }}
+      - name: Update Rust and add toolchain ${{ matrix.target }}
         run: |
           set -ex
           rm ~/.cargo/bin/rustfmt
           rm ~/.cargo/bin/cargo-fmt
-          rustup update
+          rustup update 
           rustup target add ${{ matrix.target }}
 
       - name: Install bin install if needed
