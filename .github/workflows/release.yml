@@ -1,0 +1,121 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release
+        uses: softprops/action-gh-release@v1
+
+  build:
+    runs-on: ${{ matrix.build-on }}
+    needs: create-release
+    strategy:
+      matrix:
+        include:
+          - cpu: x86_64
+            os: linux
+            target: x86_64-unknown-linux-musl
+            build-on: ubuntu-latest
+            use-cross: false
+            install-musl: true
+            exe: ""
+            run-tests: true
+          - cpu: aarch64
+            os: linux
+            target: aarch64-unknown-linux-musl
+            build-on: ubuntu-latest
+            use-cross: true
+            install-musl: false
+            exe: ""
+            run-tests: false
+          - cpu: aarch64
+            os: macOS
+            target: aarch64-apple-darwin
+            build-on: macos-latest
+            use-cross: true
+            install-musl: false
+            exe: ""
+            run-tests: false
+          - cpu: x86_64
+            os: macOS
+            target: x86_64-apple-darwin
+            build-on: macos-latest
+            use-cross: false
+            install-musl: false
+            exe: ""
+            run-tests: true
+
+    name: Build Release ${{ matrix.cpu }} ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install musl-tools if needed
+        if: ${{ matrix.install-musl }}
+        run: |
+          set -ex
+          sudo apt-get update
+          sudo apt-get install -y musl-tools
+
+      - name: Install Rust stable toolchain ${{ matrix.target }}
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+          override: true
+
+      - name: Run tests
+        if: ${{ matrix.run-tests }}
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --profile release-lto --target ${{ matrix.target }} -- --nocapture
+
+      - name: Build binary target/${{ matrix.target }}/release/ya-runtime-outbound
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: ${{ matrix.use-cross }}
+          command: build
+          args: --profile release-lto --target ${{ matrix.target }}
+
+      - name: Gz asset
+        run: |
+          set -ex
+          tar -cf - -C target/${{ matrix.target }}/release-lto/ ya-runtime-outbound${{ matrix.exe }} | gzip -9 > ya-runtime-outbound.tar.gz
+          tar -cf - -C target/${{ matrix.target }}/release-lto/ ya-runtime-outbound${{ matrix.exe }} | xz -9 > ya-runtime-outbound.tar.xz
+
+      - name: Upload
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ya-runtime-outbound${{ matrix.exe }}.tar.gz
+          asset_name: ya-runtime-outbound-${{ matrix.os }}-${{ matrix.cpu }}.tar.gz
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Gzipped binary for ${{ matrix.cpu }} ${{ matrix.os }}"
+
+      - name: Upload
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ya-runtime-outbound${{ matrix.exe }}.tar.xz
+          asset_name: ya-runtime-outbound-${{ matrix.os }}-${{ matrix.cpu }}.tar.xz
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Xzipped binary for ${{ matrix.cpu }} ${{ matrix.os }}"
+
+      - name: Upload config
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: conf/ya-runtime-outbound.json
+          asset_name: ya-runtime-outbound.json
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "Configuration file for ya-runtime-outbound"

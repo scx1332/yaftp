@@ -14,7 +14,7 @@ default=[]
 bin=['env_logger', 'dotenv']
 
 [[bin]]
-name="yaftp"
+name="gftp"
 required-features=['bin']
 
 [dependencies]
