@@ -86,6 +86,5 @@ jobs:
           ${{ matrix.build-with }} test --profile dev --target ${{ matrix.target }} -- --nocapture
 
       - name: Build binary target/${{ matrix.target }}/release/yaftp
-        uses: actions-rs/cargo@v1
         run: |
           ${{ matrix.build-with }} build -p yaftp --bin gftp --features=bin --profile dev --target ${{ matrix.target }}
