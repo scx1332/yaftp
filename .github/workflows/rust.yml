@@ -69,7 +69,6 @@ jobs:
       - name: Update Rust and add toolchain ${{ matrix.target }}
         if: ${{ !matrix.use-cross }}
         run: |
-          set -ex
           rustup update 
           rustup target add ${{ matrix.target }}
 
