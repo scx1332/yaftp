@@ -48,3 +48,10 @@ tempdir = "0.3.7"
 tokio = { version = "1", features = ["process"] }
 
 [build-dependencies]
+
+[profile.release-lto]
+inherits = "release"
+codegen-units = 1
+lto = "fat"
+opt-level = 3
+panic ="abort"

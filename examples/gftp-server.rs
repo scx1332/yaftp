@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Result};
 use futures::future::{FutureExt, LocalBoxFuture};
-use gftp::rpc::*;
+use yaftp::rpc::*;
 use sha3::digest::generic_array::GenericArray;
 use sha3::Digest;
 use std::ffi::OsString;
