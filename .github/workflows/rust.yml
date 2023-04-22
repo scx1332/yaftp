@@ -71,12 +71,12 @@ jobs:
           cargo binstall cross -y
 
       - name: Check formatting
-        if: ${{ matrix.run-tests }}
+        if: matrix.run-tests
         run: |
           cargo fmt --check
 
       - name: Run tests
-        if: ${{ matrix.run-tests }}
+        if: matrix.run-tests
         run: |
           ${{ matrix.build-with }} test --profile dev --target ${{ matrix.target }} -- --nocapture
 
