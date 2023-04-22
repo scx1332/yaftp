@@ -112,13 +112,3 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           body: "Xzipped binary for ${{ matrix.cpu }} ${{ matrix.os }}"
-
-      - name: Upload config
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: conf/yaftp.json
-          asset_name: yaftp.json
-          tag: ${{ github.ref }}
-          overwrite: true
-          body: "Configuration file for yaftp"

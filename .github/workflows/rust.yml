@@ -87,11 +87,11 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --profile release --target ${{ matrix.target }} -- --nocapture
+          args: --profile dev --target ${{ matrix.target }} -- --nocapture
 
       - name: Build binary target/${{ matrix.target }}/release/yaftp
         uses: actions-rs/cargo@v1
         with:
           use-cross: ${{ matrix.use-cross }}
           command: build
-          args: -p yaftp --bin gftp --features=bin --profile release --target ${{ matrix.target }}
+          args: -p yaftp --bin gftp --features=bin --profile dev --target ${{ matrix.target }}
