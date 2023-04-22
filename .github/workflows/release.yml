@@ -56,23 +56,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install musl-tools if needed
-        if: ${{ matrix.install-musl }}
+      - name: Update Rust and add toolchain ${{ matrix.target }}
+        if: ${{ !matrix.use-cross }}
         run: |
-          set -ex
-          sudo apt-get update
-          sudo apt-get install -y musl-tools
-
-      - name: Install Rust stable toolchain ${{ matrix.target }}
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: ${{ matrix.target }}
-          override: true
+          rustup update 
+          rustup target add ${{ matrix.target }}
 
       - name: Install bin install if needed
+        if: ${{ matrix.use-cross }}
         run: |
           wget -qO- https://github.com/cargo-bins/cargo-binstall/releases/latest/download/cargo-binstall-x86_64-unknown-linux-musl.tgz | tar xvz -C ~/.cargo/bin
+
+      - name: Install cross if needed
+        if: ${{ matrix.use-cross }}
+        run: |
+          cargo binstall cross -y
 
       - name: Run tests
         if: ${{ matrix.run-tests }}
@@ -86,7 +84,7 @@ jobs:
         with:
           use-cross: ${{ matrix.use-cross }}
           command: build
-          args: --bin gftp --features="bin" --profile release-lto --target ${{ matrix.target }}
+          args: --bin gftp --features=bin --profile release-lto --target ${{ matrix.target }}
 
       - name: Gz asset
         run: |
