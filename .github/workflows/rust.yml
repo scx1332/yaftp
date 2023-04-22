@@ -79,7 +79,7 @@ jobs:
 
       - name: Install cross if needed
         run: |
-          cargo binstall cross
+          cargo binstall cross -y
 
       - name: Check formatting
         if: ${{ matrix.run-tests }}
