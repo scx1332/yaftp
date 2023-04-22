@@ -82,4 +82,4 @@ jobs:
 
       - name: Build binary target/${{ matrix.target }}/release/yaftp
         run: |
-          ${{ matrix.build-with }} build -p yaftp --bin gftp --features=bin --profile dev --target ${{ matrix.target }}
+          ${{ matrix.build-with }} build --bin gftp --features=bin --profile dev --target ${{ matrix.target }}
