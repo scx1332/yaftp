@@ -77,7 +77,7 @@ jobs:
           command: test
           args: --profile release-lto --target ${{ matrix.target }} -- --nocapture
 
-      - name: Build binary target/${{ matrix.target }}/release/ya-runtime-outbound
+      - name: Build binary target/${{ matrix.target }}/release/yaftp
         uses: actions-rs/cargo@v1
         with:
           use-cross: ${{ matrix.use-cross }}
@@ -87,15 +87,16 @@ jobs:
       - name: Gz asset
         run: |
           set -ex
-          tar -cf - -C target/${{ matrix.target }}/release-lto/ ya-runtime-outbound${{ matrix.exe }} | gzip -9 > ya-runtime-outbound.tar.gz
-          tar -cf - -C target/${{ matrix.target }}/release-lto/ ya-runtime-outbound${{ matrix.exe }} | xz -9 > ya-runtime-outbound.tar.xz
+          mv target/${{ matrix.target }}/release-lto/gftp${{ matrix.exe }} target/${{ matrix.target }}/release-lto/yaftp${{ matrix.exe }}
+          tar -cf - -C target/${{ matrix.target }}/release-lto/ yaftp${{ matrix.exe }} | gzip -9 > yaftp.tar.gz
+          tar -cf - -C target/${{ matrix.target }}/release-lto/ yaftp${{ matrix.exe }} | xz -9 > yaftp.tar.xz
 
       - name: Upload
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ya-runtime-outbound${{ matrix.exe }}.tar.gz
-          asset_name: ya-runtime-outbound-${{ matrix.os }}-${{ matrix.cpu }}.tar.gz
+          file: yaftp${{ matrix.exe }}.tar.gz
+          asset_name: yaftp-${{ matrix.os }}-${{ matrix.cpu }}.tar.gz
           tag: ${{ github.ref }}
           overwrite: true
           body: "Gzipped binary for ${{ matrix.cpu }} ${{ matrix.os }}"
@@ -104,8 +105,8 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ya-runtime-outbound${{ matrix.exe }}.tar.xz
-          asset_name: ya-runtime-outbound-${{ matrix.os }}-${{ matrix.cpu }}.tar.xz
+          file: yaftp${{ matrix.exe }}.tar.xz
+          asset_name: yaftp-${{ matrix.os }}-${{ matrix.cpu }}.tar.xz
           tag: ${{ github.ref }}
           overwrite: true
           body: "Xzipped binary for ${{ matrix.cpu }} ${{ matrix.os }}"
@@ -114,8 +115,8 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: conf/ya-runtime-outbound.json
-          asset_name: ya-runtime-outbound.json
+          file: conf/yaftp.json
+          asset_name: yaftp.json
           tag: ${{ github.ref }}
           overwrite: true
-          body: "Configuration file for ya-runtime-outbound"
+          body: "Configuration file for yaftp"
