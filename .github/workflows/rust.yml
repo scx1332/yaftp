@@ -66,16 +66,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y musl-tools
 
-      - name: Install rustup
+      - name: Install musl-tools if needed
+        if: ${{ matrix.install-musl }}
         run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain none
-
-      - name: Install Rust stable toolchain ${{ matrix.target }}
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: ${{ matrix.target }}
-          override: true
+          set -ex
+          rustup install ${{ matrix.target }}
 
       - name: Install bin install if needed
         run: |
