@@ -101,4 +101,4 @@ jobs:
         with:
           use-cross: ${{ matrix.use-cross }}
           command: build
-          args: -p yaftp --bin gftp --features="bin" --profile dev --target ${{ matrix.target }}
+          args: -p yaftp --bin gftp --features=bin --profile dev --target ${{ matrix.target }}
