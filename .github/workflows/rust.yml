@@ -70,6 +70,7 @@ jobs:
         if: ${{ matrix.install-musl }}
         run: |
           set -ex
+          rustup update
           rustup toolchain install stable-${{ matrix.target }}
 
       - name: Install bin install if needed
