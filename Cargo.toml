@@ -1,6 +1,6 @@
 [package]
 name = "yaftp"
-version = "0.3.7"
+version = "0.3.8"
 authors = ["Golem Factory <contact@golem.network>"]
 edition = "2021"
 homepage = "https://github.com/golemfactory/yagna"
