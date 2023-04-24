@@ -171,18 +171,38 @@ async fn server_loop() {
 async fn main() -> Result<()> {
     dotenv::dotenv().ok();
 
+    if std::env::var("RUST_LOG").is_err() {
+        std::env::set_var("RUST_LOG", "info");
+    };
     let mut builder = Builder::from_env(Env::new());
     builder.target(Target::Stderr);
     builder.init();
 
     let args = Args::from_args();
-    match args.command {
-        Command::Command(request) => match execute(None, request, args.verbose).await {
-            ExecMode::Service => actix_rt::signal::ctrl_c().await?,
-            _ => log::debug!("Shutting down"),
+    let task = tokio::task::spawn_local(async move {
+        match args.command {
+            Command::Command(request) => match execute(None, request, args.verbose).await {
+                ExecMode::Service => {
+                    actix_rt::signal::ctrl_c().await.unwrap()
+                },
+                _ => log::debug!("Shutting down"),
+            },
+            Command::Server => server_loop().await,
+        }
+    });
+
+    tokio::select! {
+        _ = task => {
+            log::debug!("Task finished")
         },
-        Command::Server => server_loop().await,
+        _ = actix_rt::signal::ctrl_c() => {
+
+            //allow some time for the task to handle ctrl-c and finish
+            tokio::time::sleep(Duration::from_millis(100)).await;
+            log::error!("Ctrl+C received, shutting down");
+        },
     }
+
 
     Ok(())
 }
